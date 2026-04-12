@@ -1,0 +1,5 @@
+# Core solver: Python standard library only
+# Visualization: Optional dependencies for benchmark
+
+numpy
+matplotlib
