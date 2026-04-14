@@ -1,122 +1,288 @@
-import os, sys, time, glob
+import flet as ft
+import os
+import sys
+import time
+import glob
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from algorithm.ForwardChaining import ForwardChainingSolver
 from algorithm.backwardChaining import BackwardChainingSolver
 from algorithm.AStar import AStarSolver
 from algorithm.Backtracking import BacktrackingSolver
 
-# ── Đọc file ──────────────────────────────────────────────────────────────
-def read_input(path):
-    with open(path, 'r', encoding='utf-8') as f:
-        lines = [l.strip() for l in f if l.strip()]
-    parse = lambda s: list(map(int, s.replace(',', ' ').split()))
-    n = int(lines[0]); idx = 1
-    board  = [parse(lines[idx+i]) for i in range(n)];   idx += n
-    h_cons = [parse(lines[idx+i]) for i in range(n)];   idx += n
-    v_cons = [parse(lines[idx+i]) for i in range(n-1)]
-    return n, board, h_cons, v_cons
-
-# ── Render bảng ───────────────────────────────────────────────────────────
-def render(n, board, h_cons, v_cons):
-    H = {1:'<', -1:'>', 0:' '}
-    V = {1:'^', -1:'v', 0:' '}
-    rows = []
-    for r in range(n):
-        s = ""
-        for c in range(n):
-            cell = str(board[r][c]) if board[r][c] != 0 else '.'
-            s += f" {cell} "
-            if c < n-1: s += H[h_cons[r][c]]
-        rows.append(s)
-        if r < n-1:
-            vs = "".join(f" {V[v_cons[r][c]]}  " if c<n-1 else f" {V[v_cons[r][c]]} "
-                         for c in range(n))
-            rows.append(vs)
-    return rows
-
-# ── Xử lý 1 file ──────────────────────────────────────────────────────────
-def process(input_path, output_dir, algo):
-    fname = os.path.basename(input_path)
-    out   = []
-    sep   = "=" * 62
-
-    try:
-        n, board, h_cons, v_cons = read_input(input_path)
-    except Exception as e:
-        print(f"[LỖI] {fname}: {e}"); return
-
-    out += [sep, f"  FILE: {fname}   |   Kích thước: {n}x{n}", sep, "",
-            "  [ Bảng ban đầu ]"]
-    out += render(n, board, h_cons, v_cons)
-    out.append("")
-
-    t0     = time.perf_counter()
-    if algo == 4:
-        result = BacktrackingSolver(n, board, h_cons, v_cons).solve()
-    elif algo == 3:
-        result = AStarSolver(n, board, h_cons, v_cons).solve()
-    elif algo == 2:
-        result = BackwardChainingSolver(n, board, h_cons, v_cons).solve()
-    else:
-        result = ForwardChainingSolver(n, board, h_cons, v_cons).solve()
-    ms     = (time.perf_counter() - t0) * 1000
-
-    out.append(f"  Thời gian giải: {ms:.3f} ms")
-    out.append("")
-
-    if result == "Inconsistent":
-        out.append("  [ KẾT QUẢ: VÔ NGHIỆM ]")
-    else:
-        done  = all(result[r][c] != 0 for r in range(n) for c in range(n))
-        label = "GIẢI HOÀN TOÀN" if done else "GIẢI MỘT PHẦN"
-        out  += [f"  [ KẾT QUẢ: {label} ]"]
-        out  += render(n, result, h_cons, v_cons)
-
-    out += ["", sep, ""]
-
-    # Ghi output
-    os.makedirs(output_dir, exist_ok=True)
-    out_path = os.path.join(output_dir, fname.replace("test", "output"))
-    with open(out_path, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(out) + '\n')
-
-    for line in out: print(line)
-
-# ── Main ──────────────────────────────────────────────────────────────────
-def main():
-    base       = os.path.dirname(os.path.abspath(__file__))
-    input_dir  = os.path.join(base, "inputs")
-    output_dir = os.path.join(base, "outputs")
-
-    print("Chọn thuật toán giải quyết:")
-    print("1. Forward Chaining")
-    print("2. Backward Chaining")
-    print("3. A* Search")
-    print("4. Backtracking")
-    choice = input("Nhập lựa chọn của bạn (1, 2, 3, hoặc 4): ").strip()
-    algo = 1
-    algo_name = "Forward Chaining"
-    if choice == '2':
-        algo = 2
-        algo_name = "Backward Chaining"
-    elif choice == '3':
-        algo = 3
-        algo_name = "A* Search"
-    elif choice == '4':
-        algo = 4
-        algo_name = "Backtracking"
+class FutoshikiGUI:
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.page.title = "🧩 Futoshiki Solver"
+        self.page.window.width = 1200
+        self.page.window.height = 800
+        self.page.theme_mode = ft.ThemeMode.LIGHT
         
-    print(f"\n[{algo_name}] Đang khởi chạy...")
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.input_dir = os.path.join(self.base_dir, "inputs")
+        self.output_dir = os.path.join(self.base_dir, "outputs")
+        
+        self.current_puzzle = None
+        self.current_result = None
+        self.solving_time = 0
+        
+        self.setup_ui()
+    
+    def setup_ui(self):
+        title = ft.Text("🧩 FUTOSHIKI SOLVER", size=32, weight="bold", color="#1976d2")
+        
+        self.algo_dropdown = ft.Dropdown(
+            label="Chọn thuật toán",
+            options=[
+                ft.dropdown.Option("1", "Forward Chaining"),
+                ft.dropdown.Option("2", "Backward Chaining"),
+                ft.dropdown.Option("3", "A* Search"),
+                ft.dropdown.Option("4", "Backtracking"),
+            ],
+            value="4",
+            width=250
+        )
+        
+        self.test_dropdown = ft.Dropdown(
+            label="Chọn bài test",
+            width=250,
+            on_change=self.on_test_changed
+        )
+        self.load_test_cases()
+        
+        solve_btn = ft.ElevatedButton(
+            "Giải",
+            on_click=self.solve_puzzle,
+            style=ft.ButtonStyle(color="white", bgcolor="#4caf50")
+        )
+        
+        self.benchmark_btn = ft.ElevatedButton(
+            "Benchmark",
+            on_click=self.run_benchmark,
+            style=ft.ButtonStyle(color="white", bgcolor="#1976d2")
+        )
+        
+        self.progress = ft.ProgressBar(visible=False, color="#4caf50")
+        self.status_text = ft.Text("Sẵn sàng", size=14, color="#616161")
+        
+        self.input_board = ft.Column(
+            scroll="auto",
+            controls=[ft.Text("📥 Bảng ban đầu:", weight="bold", size=14)],
+            visible=False
+        )
+        
+        self.output_board = ft.Column(
+            scroll="auto",
+            controls=[ft.Text("📤 Kết quả:", weight="bold", size=14)],
+            visible=False
+        )
+        
+        self.result_info = ft.Column(
+            controls=[ft.Text("Thông tin:", weight="bold", size=14)],
+            visible=False
+        )
+        
+        control_row = ft.Row(
+            controls=[self.algo_dropdown, self.test_dropdown, solve_btn, self.benchmark_btn],
+            spacing=10,
+            wrap=True
+        )
+        
+        main_column = ft.Column(
+            controls=[
+                title,
+                ft.Divider(),
+                control_row,
+                self.progress,
+                self.status_text,
+                ft.Divider(),
+                ft.Row(
+                    controls=[
+                        ft.Column([self.input_board], expand=True),
+                        ft.Column([self.output_board], expand=True),
+                    ],
+                    vertical_alignment=ft.CrossAxisAlignment.START,
+                    expand=True
+                ),
+                self.result_info,
+            ],
+            spacing=10,
+            scroll="auto"
+        )
+        
+        self.page.add(main_column)
+    
+    def load_test_cases(self):
+        files = sorted(glob.glob(os.path.join(self.input_dir, "test*.txt")))
+        options = [ft.dropdown.Option(f, os.path.basename(f)) for f in files]
+        self.test_dropdown.options = options
+        if options:
+            self.test_dropdown.value = options[0].key
+    
+    def on_test_changed(self, e):
+        if e.data:
+            self.load_puzzle(e.data)
+    
+    def load_puzzle(self, filepath):
+        try:
+            self.current_puzzle = self.read_input(filepath)
+            self.display_board("input")
+            self.status_text.value = f"✅ Nạp thành công: {os.path.basename(filepath)}"
+            self.status_text.color = "#4caf50"
+            self.output_board.visible = False
+            self.page.update()
+        except Exception as ex:
+            self.status_text.value = f"❌ Lỗi: {str(ex)}"
+            self.status_text.color = "#f44336"
+            self.page.update()
+    
+    def read_input(self, path):
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = [l.strip() for l in f if l.strip()]
+        parse = lambda s: list(map(int, s.replace(',', ' ').split()))
+        n = int(lines[0])
+        idx = 1
+        board = [parse(lines[idx + i]) for i in range(n)]
+        idx += n
+        h_cons = [parse(lines[idx + i]) for i in range(n)]
+        idx += n
+        v_cons = [parse(lines[idx + i]) for i in range(n - 1)]
+        return (n, board, h_cons, v_cons)
+    
+    def render_board(self, n, board, h_cons, v_cons):
+        H = {1: '<', -1: '>', 0: ' '}
+        V = {1: '^', -1: 'v', 0: ' '}
+        rows = []
+        for r in range(n):
+            s = ""
+            for c in range(n):
+                cell = str(board[r][c]) if board[r][c] != 0 else '·'
+                s += f" {cell} "
+                if c < n - 1:
+                    s += H[h_cons[r][c]]
+            rows.append(s)
+            if r < n - 1:
+                vs = ""
+                for c in range(n):
+                    vs += f" {V[v_cons[r][c]]} "
+                    if c < n - 1:
+                        vs += " "
+                rows.append(vs)
+        return rows
+    
+    def display_board(self, board_type="input"):
+        if not self.current_puzzle:
+            return
+        n, board, h_cons, v_cons = self.current_puzzle
+        rows = self.render_board(n, board, h_cons, v_cons)
+        self.input_board.controls = [
+            ft.Text("📥 Bảng ban đầu:", weight="bold", size=14),
+            ft.Container(
+                content=ft.Text("\n".join(rows), font_family="Courier New", size=12, color="#616161"),
+                padding=10,
+                bgcolor="#f5f5f5",
+                border_radius=5
+            )
+        ]
+        self.input_board.visible = True
+    
+    def display_result_board(self):
+        if not self.current_result or self.current_result == "Inconsistent":
+            return
+        n, board, h_cons, v_cons = self.current_puzzle
+        rows = self.render_board(n, self.current_result, h_cons, v_cons)
+        self.output_board.controls = [
+            ft.Text("📤 Kết quả:", weight="bold", size=14),
+            ft.Container(
+                content=ft.Text("\n".join(rows), font_family="Courier New", size=12, color="#2e7d32"),
+                padding=10,
+                bgcolor="#e8f5e9",
+                border_radius=5
+            )
+        ]
+        self.output_board.visible = True
+    
+    def solve_puzzle(self, e):
+        if not self.current_puzzle:
+            self.status_text.value = "❌ Vui lòng chọn bài test"
+            self.status_text.color = "#f44336"
+            self.page.update()
+            return
+        
+        algo_choice = self.algo_dropdown.value
+        n, board, h_cons, v_cons = self.current_puzzle
+        
+        self.progress.visible = True
+        self.status_text.value = "⏳ Đang giải..."
+        self.status_text.color = "#1976d2"
+        self.page.update()
+        
+        try:
+            t0 = time.perf_counter()
+            if algo_choice == "4":
+                solver = BacktrackingSolver(n, board, h_cons, v_cons)
+                algo_name = "Backtracking"
+            elif algo_choice == "3":
+                solver = AStarSolver(n, board, h_cons, v_cons)
+                algo_name = "A* Search"
+            elif algo_choice == "2":
+                solver = BackwardChainingSolver(n, board, h_cons, v_cons)
+                algo_name = "Backward Chaining"
+            else:
+                solver = ForwardChainingSolver(n, board, h_cons, v_cons)
+                algo_name = "Forward Chaining"
+            
+            self.current_result = solver.solve()
+            self.solving_time = (time.perf_counter() - t0) * 1000
+            
+            if self.current_result == "Inconsistent":
+                self.status_text.value = f"❌ VÔ NGHIỆM ({algo_name}, {self.solving_time:.3f}ms)"
+                self.status_text.color = "#f44336"
+                self.output_board.controls = [ft.Text("📤 Kết quả: VÔ NGHIỆM", weight="bold", color="#f44336")]
+                self.output_board.visible = True
+            else:
+                done = all(self.current_result[r][c] != 0 for r in range(n) for c in range(n))
+                status = "HOÀN TẤT" if done else "MỘT PHẦN"
+                self.status_text.value = f"✅ {status} ({algo_name}, {self.solving_time:.3f}ms)"
+                self.status_text.color = "#4caf50"
+                self.display_result_board()
+            
+            self.result_info.controls = [
+                ft.Text("ℹ️ Thông tin:", weight="bold", size=14),
+                ft.Text(f"Thuật toán: {algo_name}", size=12),
+                ft.Text(f"Thời gian giải: {self.solving_time:.3f} ms", size=12),
+                ft.Text(f"Kích thước bảng: {n}x{n}", size=12),
+            ]
+            self.result_info.visible = True
+        except Exception as ex:
+            self.status_text.value = f"❌ Lỗi: {str(ex)}"
+            self.status_text.color = "#f44336"
+        finally:
+            self.progress.visible = False
+            self.page.update()
+    
+    def run_benchmark(self, e):
+        self.status_text.value = "⏳ Đang chạy Benchmark..."
+        self.status_text.color = "#1976d2"
+        self.progress.visible = True
+        self.page.update()
+        try:
+            result = os.system(f"cd {self.base_dir} && python benchmark.py")
+            if result == 0:
+                self.status_text.value = "✅ Benchmark hoàn thành! Xem kết quả trong thư mục result/"
+                self.status_text.color = "#4caf50"
+            else:
+                self.status_text.value = "❌ Benchmark thất bại"
+                self.status_text.color = "#f44336"
+        except Exception as ex:
+            self.status_text.value = f"❌ Lỗi: {str(ex)}"
+            self.status_text.color = "#f44336"
+        finally:
+            self.progress.visible = False
+            self.page.update()
 
-    files = sorted(glob.glob(os.path.join(input_dir, "test*.txt")))
-    if not files:
-        print("Không tìm thấy test case nào trong inputs/"); return
-
-    print(f"Tìm thấy {len(files)} test case(s). Đang giải...\n")
-    for f in files:
-        process(f, output_dir, algo)
-
-    print(f"\nKết quả đã lưu vào: {output_dir}")
+def main(page: ft.Page):
+    gui = FutoshikiGUI(page)
 
 if __name__ == "__main__":
-    main()
+    ft.app(target=main, view=ft.AppView.FLET_APP)

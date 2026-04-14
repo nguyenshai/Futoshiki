@@ -1,75 +1,75 @@
 FUTOSHIKI ALGORITHM BENCHMARK REPORT
 ================================================================================
 
-Date: 2026-04-12 21:28:43
+Date: 2026-04-14 10:26:26
 
 DETAILED RESULTS PER TEST:
 --------------------------------------------------------------------------------
 
 Test: test01.txt (Size: 4x4, Given: 6)
-  ✓ Forward Chaining    :    0.400 ms
-  ✓ Backward Chaining   :    5.499 ms
-  ✓ A* Search           :    0.711 ms
-  ✓ Backtracking        :    0.048 ms
+  ✓ Forward Chaining    :    0.328 ms
+  ✓ Backward Chaining   :    5.083 ms
+  ✓ A* Search           :    0.502 ms
+  ✓ Backtracking        :    0.041 ms
 
 Test: test02.txt (Size: 5x5, Given: 9)
-  ✓ Forward Chaining    :    1.263 ms
-  ✓ Backward Chaining   :   44.849 ms
-  ✓ A* Search           :    1.824 ms
-  ✓ Backtracking        :    0.049 ms
+  ✓ Forward Chaining    :    0.963 ms
+  ✓ Backward Chaining   :   38.439 ms
+  ✓ A* Search           :    1.165 ms
+  ✓ Backtracking        :    0.054 ms
 
 Test: test03.txt (Size: 6x6, Given: 10)
-  ✗ Forward Chaining    :    1.563 ms
-  ✓ Backward Chaining   :  422.625 ms
-  ✓ A* Search           :    8.203 ms
-  ✓ Backtracking        :    0.508 ms
+  ✗ Forward Chaining    :    1.555 ms
+  ✓ Backward Chaining   :  245.139 ms
+  ✓ A* Search           :    4.454 ms
+  ✓ Backtracking        :    0.214 ms
 
 Test: test04.txt (Size: 7x7, Given: 14)
-  ✗ Forward Chaining    :    3.670 ms
-  ✓ Backward Chaining   :  999.759 ms
-  ✓ A* Search           :   34.783 ms
-  ✓ Backtracking        :    1.597 ms
+  ✗ Forward Chaining    :    2.740 ms
+  ✓ Backward Chaining   :  948.197 ms
+  ✓ A* Search           :   23.054 ms
+  ✓ Backtracking        :    0.976 ms
 
 Test: test05.txt (Size: 8x8, Given: 16)
-  ✗ Forward Chaining    :    9.583 ms
-  ✓ Backward Chaining   : 5741.668 ms
-  ✓ A* Search           :   56.313 ms
-  ✓ Backtracking        :    3.480 ms
+  ✗ Forward Chaining    :    6.883 ms
+  ✓ Backward Chaining   : 5012.439 ms
+  ✓ A* Search           :   45.187 ms
+  ✓ Backtracking        :    6.226 ms
 
 Test: test06.txt (Size: 9x9, Given: 40)
-  ✓ Forward Chaining    :   12.538 ms
-  ✓ Backward Chaining   : 4210.207 ms
-  ✓ A* Search           :   21.995 ms
-  ✓ Backtracking        :    0.435 ms
+  ✓ Forward Chaining    :   12.662 ms
+  ✓ Backward Chaining   : 3418.527 ms
+  ✓ A* Search           :   12.142 ms
+  ✓ Backtracking        :    0.445 ms
 
 Test: test07.txt (Size: 4x4, Given: 5)
-  ✗ Forward Chaining    :    0.879 ms
-  ✓ Backward Chaining   :   10.723 ms
-  ✓ A* Search           :    2.041 ms
-  ✓ Backtracking        :    0.062 ms
+  ✗ Forward Chaining    :    0.236 ms
+  ✓ Backward Chaining   :    6.002 ms
+  ✓ A* Search           :    1.149 ms
+  ✓ Backtracking        :    0.035 ms
 
 Test: test08.txt (Size: 5x5, Given: 5)
-  ✗ Forward Chaining    :    1.087 ms
-  ✓ Backward Chaining   :  172.489 ms
-  ✓ A* Search           :    9.993 ms
-  ✓ Backtracking        :    0.928 ms
+  ✗ Forward Chaining    :    0.845 ms
+  ✓ Backward Chaining   :  152.877 ms
+  ✓ A* Search           :    5.267 ms
+  ✓ Backtracking        :    0.877 ms
 
 Test: test09.txt (Size: 6x6, Given: 9)
-  ✗ Forward Chaining    :    3.342 ms
-  ✓ Backward Chaining   :  336.996 ms
-  ✓ A* Search           :   11.445 ms
-  ✓ Backtracking        :    0.292 ms
+  ✗ Forward Chaining    :    2.029 ms
+  ✓ Backward Chaining   :  306.747 ms
+  ✓ A* Search           :    5.823 ms
+  ✓ Backtracking        :    0.202 ms
 
 Test: test10.txt (Size: 7x7, Given: 11)
-  ✗ Forward Chaining    :    4.921 ms
-  ✓ Backward Chaining   : 3485.539 ms
-  ✓ A* Search           :   52.913 ms
-  ✓ Backtracking        :    5.041 ms
+  ✗ Forward Chaining    :    2.916 ms
+  ✓ Backward Chaining   : 2998.330 ms
+  ✓ A* Search           :   31.143 ms
+  ✓ Backtracking        :    5.293 ms
 
 ================================================================================
 SUMMARY:
 --------------------------------------------------------------------------------
-Forward Chaining      |  Min:    0.400  Max:   12.538  Avg:    3.925 ms
-Backward Chaining     |  Min:    5.499  Max: 5741.668  Avg: 1543.035 ms
-A* Search             |  Min:    0.711  Max:   56.313  Avg:   20.022 ms
-Backtracking          |  Min:    0.048  Max:    5.041  Avg:    1.244 ms
+Forward Chaining      |  Min:    0.236  Max:   12.662  Avg:    3.116 ms
+Backward Chaining     |  Min:    5.083  Max: 5012.439  Avg: 1313.178 ms
+A* Search             |  Min:    0.502  Max:   45.187  Avg:   12.989 ms
+Backtracking          |  Min:    0.035  Max:    6.226  Avg:    1.436 ms

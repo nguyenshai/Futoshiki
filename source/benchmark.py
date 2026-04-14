@@ -12,9 +12,7 @@ from algorithm.ForwardChaining import ForwardChainingSolver
 from algorithm.backwardChaining import BackwardChainingSolver
 from algorithm.AStar import AStarSolver
 from algorithm.Backtracking import BacktrackingSolver
-# ─────────────────────────────────────────────────────────────────────────────
-# INPUT PARSING
-# ─────────────────────────────────────────────────────────────────────────────
+
 
 def read_input(path):
     """Parse Futoshiki puzzle input file."""
@@ -35,9 +33,7 @@ def read_input(path):
     
     return n, board, h_cons, v_cons
 
-# ─────────────────────────────────────────────────────────────────────────────
-# SOLVER WRAPPER
-# ─────────────────────────────────────────────────────────────────────────────
+
 
 def solve_with_timeout(algo_name, n, board, h_cons, v_cons, timeout=30):
     """
@@ -71,9 +67,7 @@ def solve_with_timeout(algo_name, n, board, h_cons, v_cons, timeout=30):
     except Exception as e:
         return False, timeout * 1000, f"Error: {str(e)}"
 
-# ─────────────────────────────────────────────────────────────────────────────
-# BENCHMARK RUNNER
-# ─────────────────────────────────────────────────────────────────────────────
+
 
 def run_benchmark(input_dir="inputs", num_tests=10):
     """
@@ -131,9 +125,7 @@ def run_benchmark(input_dir="inputs", num_tests=10):
     
     return results
 
-# ─────────────────────────────────────────────────────────────────────────────
-# VISUALIZATION
-# ─────────────────────────────────────────────────────────────────────────────
+
 
 def visualize_results(results, output_dir="outputs"):
     """Generate comprehensive benchmark visualizations."""
@@ -143,9 +135,7 @@ def visualize_results(results, output_dir="outputs"):
     tests = results["tests"]
     times = results["times"]
     
-    # ─────────────────────────────────────────────────────────────────────────
-    # Chart 1: Per-test comparison (Group bar chart)
-    # ─────────────────────────────────────────────────────────────────────────
+   
     fig, ax = plt.subplots(figsize=(16, 6))
     
     x = np.arange(len(tests))
@@ -168,9 +158,7 @@ def visualize_results(results, output_dir="outputs"):
     print("✓ Saved: 01_bar_chart.png")
     plt.close()
     
-    # ─────────────────────────────────────────────────────────────────────────
-    # Chart 2: Line plot - Algorithm trends across tests
-    # ─────────────────────────────────────────────────────────────────────────
+    
     fig, ax = plt.subplots(figsize=(14, 8))
     
     for i, algo in enumerate(algorithms):
@@ -189,9 +177,7 @@ def visualize_results(results, output_dir="outputs"):
     print("✓ Saved: 02_line_chart.png")
     plt.close()
     
-    # ─────────────────────────────────────────────────────────────────────────
-    # Chart 3: Heatmap - Performance matrix
-    # ─────────────────────────────────────────────────────────────────────────
+
     fig, ax = plt.subplots(figsize=(12, 6))
     
     data = np.array([times[algo] for algo in algorithms])
@@ -219,10 +205,7 @@ def visualize_results(results, output_dir="outputs"):
     plt.savefig(os.path.join(output_dir, '03_heatmap.png'), dpi=150)
     print("✓ Saved: 03_heatmap.png")
     plt.close()
-    
-    # ─────────────────────────────────────────────────────────────────────────
-    # Chart 4: Box plot - Time distribution per algorithm
-    # ─────────────────────────────────────────────────────────────────────────
+
     fig, ax = plt.subplots(figsize=(12, 7))
     
     box_data = [times[algo] for algo in algorithms]
@@ -241,10 +224,6 @@ def visualize_results(results, output_dir="outputs"):
     plt.savefig(os.path.join(output_dir, '04_boxplot.png'), dpi=150)
     print("✓ Saved: 04_boxplot.png")
     plt.close()
-    
-    # ─────────────────────────────────────────────────────────────────────────
-    # Chart 5: Average time per algorithm (Bar chart)
-    # ─────────────────────────────────────────────────────────────────────────
     fig, ax = plt.subplots(figsize=(12, 6))
     
     avg_times = [np.mean(times[algo]) for algo in algorithms]
@@ -265,11 +244,6 @@ def visualize_results(results, output_dir="outputs"):
     plt.savefig(os.path.join(output_dir, '05_average_performance.png'), dpi=150)
     print("✓ Saved: 05_average_performance.png")
     plt.close()
-
-# ─────────────────────────────────────────────────────────────────────────────
-# STATISTICS REPORT
-# ─────────────────────────────────────────────────────────────────────────────
-
 def print_statistics(results):
     """Print detailed statistics report."""
     algorithms = results["algorithms"]
@@ -315,10 +289,6 @@ def print_statistics(results):
     
     print("\n" + "="*80 + "\n")
 
-# ─────────────────────────────────────────────────────────────────────────────
-# SAVE REPORT
-# ─────────────────────────────────────────────────────────────────────────────
-
 def save_report(results, output_dir="outputs"):
     """Save benchmark results as text report."""
     os.makedirs(output_dir, exist_ok=True)
@@ -351,11 +321,6 @@ def save_report(results, output_dir="outputs"):
             f.write(f"{algo:20s}  |  Min: {min(algo_times):8.3f}  Max: {max(algo_times):8.3f}  Avg: {np.mean(algo_times):8.3f} ms\n")
     
     print(f"✓ Saved: benchmark_report.txt")
-
-# ─────────────────────────────────────────────────────────────────────────────
-# MAIN
-# ─────────────────────────────────────────────────────────────────────────────
-
 def main():
     base = os.path.dirname(os.path.abspath(__file__))
     input_dir = os.path.join(base, "inputs")
