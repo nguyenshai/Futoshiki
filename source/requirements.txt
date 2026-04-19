@@ -1,8 +1,8 @@
 # Futoshiki Puzzle Solver - Requirements
 # GUI Framework
-flet>=0.28.0
+flet==0.28.0
 
 # Data Processing & Visualization
-numpy>=1.24.0
-matplotlib>=3.7.0
-pillow>=9.5.0
+numpy==1.24.0
+matplotlib==3.7.0
+pillow==9.5.0
