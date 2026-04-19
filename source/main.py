@@ -9,6 +9,7 @@ from algorithm.ForwardChaining import ForwardChainingSolver
 from algorithm.backwardChaining import BackwardChainingSolver
 from algorithm.AStar import AStarSolver
 from algorithm.Backtracking import BacktrackingSolver
+from algorithm.Secret import SecretSolver
 
 class FutoshikiGUI:
     def __init__(self, page: ft.Page):
@@ -38,8 +39,9 @@ class FutoshikiGUI:
                 ft.dropdown.Option("2", "Backward Chaining"),
                 ft.dropdown.Option("3", "A* Search"),
                 ft.dropdown.Option("4", "Backtracking"),
+                ft.dropdown.Option("5", "Secret"),
             ],
-            value="4",
+            value="5",
             width=250
         )
         
@@ -219,7 +221,10 @@ class FutoshikiGUI:
         
         try:
             t0 = time.perf_counter()
-            if algo_choice == "4":
+            if algo_choice == "5":
+                solver = SecretSolver(n, board, h_cons, v_cons)
+                algo_name = "Secret"
+            elif algo_choice == "4":
                 solver = BacktrackingSolver(n, board, h_cons, v_cons)
                 algo_name = "Backtracking"
             elif algo_choice == "3":
