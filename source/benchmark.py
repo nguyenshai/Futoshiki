@@ -12,6 +12,7 @@ from algorithm.ForwardChaining import ForwardChainingSolver
 from algorithm.backwardChaining import BackwardChainingSolver
 from algorithm.AStar import AStarSolver
 from algorithm.Backtracking import BacktrackingSolver
+from algorithm.Secret import SecretSolver
 
 
 def read_input(path):
@@ -49,6 +50,8 @@ def solve_with_timeout(algo_name, n, board, h_cons, v_cons, timeout=30):
             solver = AStarSolver(n, board, h_cons, v_cons)
         elif algo_name == "Backtracking":
             solver = BacktrackingSolver(n, board, h_cons, v_cons)
+        elif algo_name == "Secret":
+            solver = SecretSolver(n, board, h_cons, v_cons)
         else:
             return False, 0, "Unknown algorithm"
         
@@ -78,7 +81,8 @@ def run_benchmark(input_dir="inputs", num_tests=10):
         "Forward Chaining",
         "Backward Chaining",
         "A* Search",
-        "Backtracking"
+        "Backtracking",
+        "Secret"
     ]
     
     # Collect test files
@@ -140,7 +144,7 @@ def visualize_results(results, output_dir="outputs"):
     
     x = np.arange(len(tests))
     width = 0.15
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
     
     for i, algo in enumerate(algorithms):
         offset = (i - 1.5) * width
