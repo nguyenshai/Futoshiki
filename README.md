@@ -142,8 +142,8 @@ Run `python benchmark.py` to generate comparison charts:
 
 ## 🔧 Technologies Used
 
-- **Python 3.11+** - Programming language
-- **Flet 0.28+** - Desktop GUI framework
+- **Python 3.11** - Programming language
+- **Flet 0.28.3** - Desktop GUI framework
 - **NumPy** - Array data processing
 - **Matplotlib** - Chart generation
 - **Pillow** - Image processing

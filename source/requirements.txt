@@ -1,8 +1,16 @@
 # Futoshiki Puzzle Solver - Requirements
 # GUI Framework
+<<<<<<< HEAD
 flet==0.28.0
+=======
+flet==0.28.3
+>>>>>>> d7bece6 (Cập nhật code trực tiếp lên nhánh main)
 
 # Data Processing & Visualization
 numpy==1.24.0
 matplotlib==3.7.0
+<<<<<<< HEAD
 pillow==9.5.0
+=======
+pillow==9.5.0
+>>>>>>> d7bece6 (Cập nhật code trực tiếp lên nhánh main)

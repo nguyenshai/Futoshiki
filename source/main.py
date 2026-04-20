@@ -47,9 +47,9 @@ class FutoshikiGUI:
         
         self.test_dropdown = ft.Dropdown(
             label="Chọn bài test",
-            width=250,
-            on_change=self.on_test_changed
+            width=250
         )
+        self.test_dropdown.on_change = self.on_test_changed
         self.load_test_cases()
         
         solve_btn = ft.ElevatedButton(
@@ -226,15 +226,19 @@ class FutoshikiGUI:
                 algo_name = "Secret"
             elif algo_choice == "4":
                 solver = BacktrackingSolver(n, board, h_cons, v_cons)
+                solver.debug = True
                 algo_name = "Backtracking"
             elif algo_choice == "3":
                 solver = AStarSolver(n, board, h_cons, v_cons)
+                solver.debug = True
                 algo_name = "A* Search"
             elif algo_choice == "2":
                 solver = BackwardChainingSolver(n, board, h_cons, v_cons)
+                solver.debug = True
                 algo_name = "Backward Chaining"
             else:
                 solver = ForwardChainingSolver(n, board, h_cons, v_cons)
+                solver.debug = True
                 algo_name = "Forward Chaining"
             
             self.current_result = solver.solve()
